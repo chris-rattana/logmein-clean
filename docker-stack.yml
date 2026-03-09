@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: logs_db
+      POSTGRES_USER: logs_user
+      POSTGRES_PASSWORD: logs_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - logmein-net
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  backend:
+    image: ghcr.io/chris-rattana/logmein-backend:latest
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: logs_db
+      DB_USER: logs_user
+      DB_PASSWORD: logs_password
+      BACKEND_PORT: 5000
+    networks:
+      - logmein-net
+    ports:
+      - target: 5000
+        published: 5000
+        protocol: tcp
+        mode: ingress
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+  frontend:
+    image: ghcr.io/chris-rattana/logmein-frontend:latest
+    networks:
+      - logmein-net
+    ports:
+      - target: 80
+        published: 8080
+        protocol: tcp
+        mode: ingress
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+networks:
+  logmein-net:
+    driver: overlay
+
+volumes:
+  postgres_data:
