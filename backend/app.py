@@ -1,6 +1,7 @@
 import os
 import time
 from datetime import datetime
+from threading import Lock
 
 import psycopg2
 import psycopg2.extras
@@ -9,6 +10,9 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
+_db_init_lock = Lock()
+_db_initialized = False
 
 
 def get_db_config():
@@ -70,6 +74,28 @@ def init_db():
                 CREATE INDEX IF NOT EXISTS idx_logs_level
                 ON logs(level)
                 """)
+
+
+def ensure_db_initialized():
+    """Initialise la base une seule fois par processus."""
+    global _db_initialized
+
+    if _db_initialized:
+        return
+
+    with _db_init_lock:
+        if _db_initialized:
+            return
+
+        wait_for_db()
+        init_db()
+        _db_initialized = True
+
+
+@app.before_request
+def bootstrap_database():
+    """Garantit que la base est prête avant de servir une requête."""
+    ensure_db_initialized()
 
 
 @app.route("/health", methods=["GET"])
@@ -279,6 +305,5 @@ def clear_logs():
 
 
 if __name__ == "__main__":
-    wait_for_db()
-    init_db()
+    ensure_db_initialized()
     app.run(host="0.0.0.0", port=int(os.getenv("BACKEND_PORT", 5000)))  # nosec B104
