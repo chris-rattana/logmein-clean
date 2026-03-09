@@ -15,16 +15,32 @@ _db_init_lock = Lock()
 _db_initialized = False
 
 
+def read_config_value(env_name, default=None, strip=True):
+    """Lit une valeur depuis VAR ou VAR_FILE si présent."""
+    file_var = f"{env_name}_FILE"
+    file_path = os.getenv(file_var)
+
+    if file_path:
+        with open(file_path, "r", encoding="utf-8") as f:
+            value = f.read()
+        return value.strip() if strip else value
+
+    value = os.getenv(env_name, default)
+    if isinstance(value, str) and strip:
+        return value.strip()
+    return value
+
+
 def get_db_config():
-    """Retourne la configuration DB depuis app.config ou les variables d'environnement."""
+    """Retourne la configuration DB depuis app.config ou l'environnement/secrets."""
     return app.config.get(
         "DB_CONFIG",
         {
-            "host": os.getenv("DB_HOST", "db"),
-            "database": os.getenv("DB_NAME", "logs_db"),
-            "user": os.getenv("DB_USER", "logs_user"),
-            "password": os.getenv("DB_PASSWORD", "logs_password"),
-            "port": int(os.getenv("DB_PORT", 5432)),
+            "host": read_config_value("DB_HOST", "db"),
+            "database": read_config_value("DB_NAME", "logs_db"),
+            "user": read_config_value("DB_USER", "logs_user"),
+            "password": read_config_value("DB_PASSWORD", "logs_password"),
+            "port": int(read_config_value("DB_PORT", 5432)),
         },
     )
 
@@ -306,4 +322,4 @@ def clear_logs():
 
 if __name__ == "__main__":
     ensure_db_initialized()
-    app.run(host="0.0.0.0", port=int(os.getenv("BACKEND_PORT", 5000)))  # nosec B104
+    app.run(host="0.0.0.0", port=int(read_config_value("BACKEND_PORT", 5000)))  # nosec B104
