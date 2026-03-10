@@ -1,4 +1,3 @@
-cat > README.md <<'EOF'
 # LogMeIn — Infrastructure DevOps et Architecture Réseau Sécurisée
 
 ## Présentation du projet
