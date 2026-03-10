@@ -240,5 +240,3 @@ Projet pédagogique destiné à démontrer des compétences en :
 - Sécurité réseau
 - Architecture d'infrastructure
 - Déploiement applicatif
-
-EOF
