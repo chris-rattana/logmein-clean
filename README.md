@@ -1,82 +1,244 @@
-# LogMeIn
+cat > README.md <<'EOF'
+# LogMeIn — Infrastructure DevOps et Architecture Réseau Sécurisée
 
 ## Présentation du projet
 
-**LogMeIn** est un projet de tableau de bord de logs et d'infrastructure, conçu pour démontrer une approche complète **applicative + DevOps + réseau/sécurité**.
+**LogMeIn** est un projet démonstratif combinant développement applicatif, DevOps et architecture réseau sécurisée.
 
-Le projet s'appuie sur :
+L’objectif est de montrer comment concevoir et déployer une application web moderne en utilisant :
 
-- un **backend Flask** ;
-- une **base de données PostgreSQL** ;
-- un **frontend servi par Nginx** ;
-- une chaîne **CI/CD avec GitHub Actions** ;
-- une publication d'images Docker sur **GHCR** ;
-- un mode de déploiement local avec **Docker Compose** ;
-- un mode de déploiement cible avec **Docker Swarm** ;
-- une **documentation technique réseau** couvrant VLAN, VLSM, ACL, VPN et supervision Zabbix.
+- une architecture containerisée avec Docker
+- une pipeline CI/CD avec GitHub Actions
+- une segmentation réseau sécurisée
+- une architecture inter-sites avec VPN
+- une supervision d’infrastructure avec Zabbix
 
-L'objectif du projet est de montrer une architecture cohérente, conteneurisée, sécurisée et documentée, exploitable dans un contexte de démonstration technique ou de rendu académique / professionnalisant.
+Ce projet met l’accent sur la conception d’infrastructure et la sécurité.
 
 ---
 
-## À quoi sert ce projet ?
+# Objectifs du projet
 
-Ce projet sert à :
+Ce projet démontre la capacité à :
 
-- centraliser et consulter des logs via une application web ;
-- démontrer une architecture web simple en **3 couches** :
-  - frontend ;
-  - backend ;
-  - base de données ;
-- illustrer un pipeline DevOps moderne :
-  - qualité de code ;
-  - tests ;
-  - CI ;
-  - CD ;
-  - build d'images Docker ;
-- documenter une conception réseau crédible :
-  - segmentation VLAN ;
-  - plan d'adressage VLSM ;
-  - politique ACL ;
-  - VPN site-to-site ;
-  - supervision Zabbix.
+- concevoir une architecture applicative moderne
+- déployer une application via Docker et Docker Compose
+- mettre en place une CI/CD automatisée
+- définir une architecture réseau sécurisée
+- documenter une infrastructure complète
 
 ---
 
-## Fonctionnalités principales
+# Architecture du projet
 
-- Interface web servie par **Nginx**
-- Backend **Flask**
-- Base de données **PostgreSQL**
-- Proxy du frontend vers l'API via `/api`
-- Exécution locale via **Docker Compose**
-- Déploiement cible via **Docker Swarm**
-- Documentation technique réseau dans `docs/network/`
+Le projet repose sur plusieurs composants :
+
+## Frontend
+- Nginx
+- reverse proxy vers l’API backend
+
+## Backend
+- Flask (Python)
+- expose une API REST
+
+## Base de données
+- PostgreSQL
+
+## Infrastructure
+- Docker Compose
+- Docker Swarm (optionnel)
+
+## Sécurité réseau
+- segmentation VLAN
+- plan d’adressage VLSM
+- ACL
+- VPN site-to-site
+
+## Supervision
+- Zabbix
 
 ---
 
-## Architecture technique
+# Architecture simplifiée
 
-### Stack utilisée
-
-- **Frontend** : Nginx
-- **Backend** : Flask
-- **Base de données** : PostgreSQL
-- **Conteneurisation** : Docker / Docker Compose
-- **Déploiement** : Docker Swarm
-- **CI/CD** : GitHub Actions + GHCR
-- **Documentation réseau** : segmentation, ACL, VPN, supervision
-
-### Vue logique simplifiée
-
-```text
-Utilisateur
-   |
-   v
-Frontend Nginx
-   |
-   v
-Backend Flask
-   |
-   v
+Utilisateur  
+↓  
+Nginx  
+↓  
+Backend Flask  
+↓  
 PostgreSQL
+
+Dans une architecture réseau complète :
+
+Site B (utilisateurs)  
+↓  
+VPN site-to-site  
+↓  
+Site A (infrastructure)
+
+Frontend → Backend → Database  
+            ↓  
+          Zabbix
+
+---
+
+# Installation locale
+
+## Prérequis
+
+- Docker
+- Docker Compose
+- Git
+
+---
+
+## Cloner le projet
+
+git clone https://github.com/chris-rattana/logmein-clean.git  
+cd logmein-clean
+
+---
+
+## Lancer l'application
+
+docker compose up -d --build
+
+---
+
+## Vérifier les conteneurs
+
+docker ps
+
+---
+
+# Accès à l'application
+
+Frontend :
+
+http://localhost
+
+API backend :
+
+http://localhost/api
+
+---
+
+# Commandes utiles
+
+Arrêter les conteneurs :
+
+docker compose down
+
+Reconstruire l'application :
+
+docker compose up -d --build
+
+Voir les logs :
+
+docker compose logs -f
+
+---
+
+# Pipeline CI/CD
+
+Le projet utilise GitHub Actions pour automatiser :
+
+- le linting
+- les tests
+- l’analyse de sécurité
+- la construction des images Docker
+- la publication dans GitHub Container Registry
+
+---
+
+# Architecture réseau
+
+La conception réseau comprend :
+
+- topologie logique multi-sites
+- segmentation VLAN
+- plan d’adressage VLSM
+- matrice des flux
+- politiques ACL
+- VPN site-to-site
+- supervision Zabbix
+
+Documentation détaillée :
+
+docs/network/logmein_network_documentation.md
+
+---
+
+# Structure du repository
+
+LogMeIn-clean
+
+app/                 Code de l'application  
+ops/                 Scripts d'exploitation  
+docs/                Documentation technique  
+docs/network/        Documentation réseau  
+
+docker-compose.yml  
+docker-stack.yml  
+README.md  
+
+---
+
+# Déploiement Docker Swarm (optionnel)
+
+Initialiser le swarm :
+
+bash ops/init-swarm.sh
+
+Créer les secrets :
+
+bash ops/create-secrets.sh
+
+Déployer la stack :
+
+bash ops/deploy-stack.sh
+
+---
+
+# Supervision
+
+Une architecture de supervision Zabbix est prévue pour :
+
+- surveiller les serveurs
+- surveiller les équipements réseau
+- détecter les pannes
+- suivre la disponibilité de l'application
+
+---
+
+# Documentation
+
+Documentation disponible dans :
+
+docs/
+
+Documentation réseau détaillée :
+
+docs/network/logmein_network_documentation.md
+
+---
+
+# Auteur
+
+Projet réalisé par :
+
+Christophe Rattanamongkhoun
+
+---
+
+# Licence
+
+Projet pédagogique destiné à démontrer des compétences en :
+
+- DevOps
+- Sécurité réseau
+- Architecture d'infrastructure
+- Déploiement applicatif
+
+EOF
