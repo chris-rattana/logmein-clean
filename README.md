@@ -21,3 +21,8 @@ LogMeIn is a small log dashboard project with:
 ├── docker-stack.yml
 ├── pyproject.toml
 └── README.md
+```
+
+## Documentation
+
+- [Documentation technique réseau](docs/network/logmein_network_documentation.md)
