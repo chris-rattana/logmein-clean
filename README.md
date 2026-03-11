@@ -61,19 +61,19 @@ Le projet repose sur plusieurs composants :
 # Architecture simplifiée
 
 Utilisateur  
-↓  
+  ↓  
 Nginx  
-↓  
+  ↓  
 Backend Flask  
-↓  
+  ↓  
 PostgreSQL
 
 Dans une architecture réseau complète :
 
 Site B (utilisateurs)  
-↓  
+  ↓  
 VPN site-to-site  
-↓  
+  ↓  
 Site A (infrastructure)
 
 Frontend → Backend → Database  
@@ -115,7 +115,7 @@ docker ps
 
 Frontend :
 
-http://localhost
+http://localhost:8080
 
 API backend :
 
